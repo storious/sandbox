@@ -1,8 +1,12 @@
 package config
 
+// define config and result struct
+
 const UNLIMITED = -1
 
-// 定义配置和结果结构体
+// show debug info in dev enviroment
+var DEBUG = false
+
 type Config struct {
 	MaxCPUTime           int   `validate:"required"`
 	MaxRealTime          int   `validate:"required"`

@@ -30,9 +30,12 @@ func main() {
 	seccompRuleName := flag.String("seccomp_rule_name", "", "Seccomp Rule Name")
 	uid := flag.Uint("uid", 65534, "UID (default 65534)")
 	gid := flag.Uint("gid", 65534, "GID (default 65534)")
+	config.DEBUG = *flag.Bool("Debug", false, "DEBUG mode (default false)")
 
-	// 解析命令行参数
 	flag.Parse()
+
+	// initial logger
+	utils.Init()
 
 	if *help {
 		flag.Usage()
@@ -44,7 +47,7 @@ func main() {
 		return
 	}
 
-	// 构建配置
+	// build config
 	cfg := &config.Config{
 		MaxCPUTime:           *maxCPUTime,
 		MaxRealTime:          *maxRealTime,
@@ -69,11 +72,11 @@ func main() {
 		panic("input args invalid")
 	}
 
-	// 运行配置
+	// add runner
 	runner := runtime.NewRunner(cfg)
 	ret := runner.Run()
 
-	// 打印结果
+	// print result
 	fmt.Printf(`{
 		"cpu_time": %d,
 		"real_time": %d,
