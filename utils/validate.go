@@ -38,7 +38,7 @@ func Validate(cfg *config.Config) bool {
 			return false
 		}
 	}
-	return !check(cfg.MaxCPUTime) || !check(cfg.MaxRealTime) || !check(cfg.MaxMemory) // for unlimited cpu or real tim ,memory
+	return check(cfg.MaxCPUTime) && check(cfg.MaxRealTime) && check(cfg.MaxMemory) // for unlimited cpu or real tim ,memory
 }
 
 func check[T int | int64](val T) bool {
