@@ -23,11 +23,11 @@ type Config struct {
 	OutputPath           string `validate:"required"`
 	ErrorPath            string `validate:"required"`
 	Args                 []string
-	Env                  []string
+	Env                  string
 	LogPath              string
 	SeccompRuleName      string
-	UID                  uint32
-	GID                  uint32
+	UID                  int
+	GID                  int
 	Debug                bool
 }
 
@@ -62,8 +62,8 @@ func GetConfig() *Config {
 	env := flag.String("env", "", "Env")
 	logPath := flag.String("log_path", "judger.log", "Log Path")
 	seccompRuleName := flag.String("seccomp_rule_name", "", "Seccomp Rule Name")
-	uid := flag.Uint("uid", 65534, "UID (default 65534)")
-	gid := flag.Uint("gid", 65534, "GID (default 65534)")
+	uid := flag.Int("uid", 65534, "UID (default 65534)")
+	gid := flag.Int("gid", 65534, "GID (default 65534)")
 	Debug := flag.Bool("Debug", false, "DEBUG mode (default false)")
 
 	flag.Parse()
@@ -96,11 +96,11 @@ func GetConfig() *Config {
 		OutputPath:           *outputPath,
 		ErrorPath:            *errorPath,
 		Args:                 args,
-		Env:                  []string{*env},
+		Env:                  *env,
 		LogPath:              *logPath,
 		SeccompRuleName:      *seccompRuleName,
-		UID:                  uint32(*uid),
-		GID:                  uint32(*gid),
+		UID:                  *uid,
+		GID:                  *gid,
 		Debug:                *Debug,
 	}
 }

@@ -27,7 +27,7 @@ func defaultResult() *config.Result {
 	}
 }
 
-func (*Runner) Run() *config.Result {
+func (r *Runner) Run() *config.Result {
 	result := defaultResult()
 
 	// check root
@@ -35,6 +35,22 @@ func (*Runner) Run() *config.Result {
 	if uid != 0 {
 		// TODO use virtual cotianer replace
 		panic("Operation forbid: Runner need root privilege")
+	}
+
+	duration, status, rusage := ChildProcess(r.Config)
+
+	result.RealTime = duration
+	if status.Signal() != 0 {
+		result.Signal = int(status.Signal())
+	}
+
+	// TODO complete
+	if status.Signal() == syscall.SIGUSR1 {
+		result.Result = config.SYSTEM_ERROR
+	} else {
+		result.ExitCode = status.ExitStatus()
+		result.CPUTime = int(rusage.Utime.Sec*1000 + rusage.Utime.Usec/1000)
+
 	}
 
 	// check args

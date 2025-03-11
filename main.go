@@ -5,7 +5,8 @@ import (
 
 	"sandbox/config"
 	"sandbox/internal/runtime"
-	"sandbox/utils"
+	"sandbox/utils/logger"
+	"sandbox/utils/validator"
 )
 
 func main() {
@@ -13,9 +14,9 @@ func main() {
 	cfg := config.GetConfig()
 
 	// initial logger
-	utils.InitLog(cfg.LogPath, cfg.Debug)
+	logger.InitLog(cfg.LogPath, cfg.Debug)
 
-	if ok := utils.Validate(cfg); !ok {
+	if ok := validator.Validate(cfg); !ok {
 		fmt.Println("cpu", cfg.MaxCPUTime, "real", cfg.MaxRealTime, "mem", cfg.MaxMemory)
 		panic("input args invalid")
 	}
