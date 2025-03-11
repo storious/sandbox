@@ -34,7 +34,7 @@ func (*Runner) Run() *config.Result {
 	uid := syscall.Getuid()
 	if uid != 0 {
 		// TODO use virtual cotianer replace
-		panic("Operation not permitted: Runner need root privilege")
+		panic("Operation forbid: Runner need root privilege")
 	}
 
 	// check args

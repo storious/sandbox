@@ -31,21 +31,6 @@ type Config struct {
 	Debug                bool
 }
 
-const (
-	SUCCESS = -iota
-	INVALID_CONFIG
-	FORK_FAILED
-	PTHREAD_FAILED
-	WAIT_FAILED
-	ROOT_REQUIRED
-	LOAD_SECCOMP_FAILED
-	SETRLIMIT_FAILED
-	DUP2_FAILED
-	SETUID_FAILED
-	EXECVE_FAILED
-	SPJ_ERROR
-)
-
 type Result struct {
 	CPUTime  int
 	RealTime int
@@ -55,15 +40,6 @@ type Result struct {
 	Error    int
 	Result   int
 }
-
-const (
-	WRONG_ANSWER = iota + 200
-	CPU_TIME_LIMIT_EXCEEDED
-	REAL_TIME_LIMIT_EXCEEDED
-	MEMORY_LIMIT_EXCEEDED
-	RUNTIME_ERROR
-	SYSTEM_ERROR
-)
 
 func GetConfig() *Config {
 
