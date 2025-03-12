@@ -33,7 +33,6 @@ func (r *Runner) Run() *config.Result {
 	// check root
 	uid := syscall.Getuid()
 	if uid != 0 {
-		// TODO use virtual cotianer replace
 		panic("Operation forbid: Runner need root privilege")
 	}
 
@@ -50,9 +49,32 @@ func (r *Runner) Run() *config.Result {
 	} else {
 		result.ExitCode = status.ExitStatus()
 		result.CPUTime = int(rusage.Utime.Sec*1000 + rusage.Utime.Usec/1000)
+		result.Memory = rusage.Maxrss
 
+		if result.ExitCode != 0 {
+			result.Result = config.RUNTIME_ERROR
+		}
+
+		if result.Signal == int(syscall.SIGSEGV) {
+			if r.MaxMemory != config.UNLIMITED && result.Memory > r.MaxMemory {
+				result.Result = config.MEMORY_LIMIT_EXCEEDED
+			} else {
+				result.Result = config.RUNTIME_ERROR
+			}
+		} else {
+			if result.Signal != 0 {
+				result.Result = config.RUNTIME_ERROR
+			}
+			if r.MaxMemory != config.UNLIMITED && result.Memory > r.MaxMemory {
+				result.Result = config.MEMORY_LIMIT_EXCEEDED
+			}
+			if r.MaxRealTime != config.UNLIMITED && result.RealTime > r.MaxRealTime {
+				result.Result = config.REAL_TIME_LIMIT_EXCEEDED
+			}
+			if r.MaxCPUTime != config.UNLIMITED && result.CPUTime > r.MaxCPUTime {
+				result.Result = config.CPU_TIME_LIMIT_EXCEEDED
+			}
+		}
 	}
-
-	// check args
 	return result
 }

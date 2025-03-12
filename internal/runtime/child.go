@@ -36,7 +36,7 @@ func ChildProcess(cfg *config.Config) (duration int, status syscall.WaitStatus, 
 	}
 
 	// Set Memory limit
-	if cfg.MemoryLimitCheckOnly == false {
+	if !cfg.MemoryLimitCheckOnly {
 		if cfg.MaxMemory != config.UNLIMITED {
 			err = syscall.Setrlimit(syscall.RLIMIT_AS, &syscall.Rlimit{
 				Cur: uint64(cfg.MaxMemory * 2),
@@ -106,7 +106,7 @@ func ChildProcess(cfg *config.Config) (duration int, status syscall.WaitStatus, 
 			logger.Error(config.StatusMessage(config.DUP2_FAILED) + ": output path error")
 			return
 		}
-		// redirect to stdout
+		// redirect to out file
 		if err = syscall.Dup2(int(output.Fd()), int(os.Stdout.Fd())); err != nil {
 			logger.Error(config.StatusMessage(config.DUP2_FAILED) + ": output redirect error")
 			return
@@ -124,7 +124,7 @@ func ChildProcess(cfg *config.Config) (duration int, status syscall.WaitStatus, 
 				return
 			}
 		}
-		// redirect to stdout
+		// redirect to stderr
 		if err = syscall.Dup2(int(errput.Fd()), int(os.Stderr.Fd())); err != nil {
 			logger.Error(config.StatusMessage(config.DUP2_FAILED) + ": error redirect error")
 			return
